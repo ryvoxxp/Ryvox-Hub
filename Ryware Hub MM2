@@ -1,0 +1,308 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Player = game.Players.LocalPlayer
+local Humanoid = Player.Character:WaitForChild("Humanoid")
+
+local MainWindow = OrionLib:MakeWindow({
+    Name = "Ryware Hub",
+    HidePremium = false,
+    SaveConfig = true,
+    IntroEnabled = false
+})
+
+OrionLib:MakeNotification({
+    Name = "Welcome To Ryware Hub!",
+    Content = "You Are Logged In As "..Player.Name..".",
+    Image = "rbxassetid://4483345998",
+    Time = 5
+})
+
+_G.Key = "RyHub"
+_G.KeyInput = ""
+
+local function LoadRywareHub()
+    local PlayerTab = MainWindow:MakeTab({
+        Name = "Player",
+        Icon = "rbxassetid://2790679413",
+        PremiumOnly = false
+    })
+
+    PlayerTab:AddSlider({
+        Name = "WalkSpeed",
+        Min = 16,
+        Max = 200,
+        Default = Humanoid.WalkSpeed,
+        Color = Color3.fromRGB(255,255,255),
+        Increment = 1,
+        ValueName = "WalkSpeed",
+        Callback = function(Value)
+            Humanoid.WalkSpeed = Value
+        end    
+    })
+
+    PlayerTab:AddSlider({
+        Name = "JumpHeight",
+        Min = 50,
+        Max = 500,
+        Default = Humanoid.JumpPower,
+        Color = Color3.fromRGB(255,255,255),
+        Increment = 1,
+        ValueName = "JumpHeight",
+        Callback = function(Value)
+            Humanoid.JumpPower = Value
+        end    
+    })
+
+    PlayerTab:AddSlider({
+        Name = "HipHeight",
+        Min = 2,
+        Max = 100,
+        Default = Humanoid.HipHeight,
+        Color = Color3.fromRGB(255,255,255),
+        Increment = 1,
+        ValueName = "HipHeight",
+        Callback = function(Value)
+            Humanoid.HipHeight = Value
+        end    
+    })
+
+    PlayerTab:AddSlider({
+        Name = "Gravity",
+        Min = 0,
+        Max = 196.2,
+        Default = workspace.Gravity,
+        Color = Color3.fromRGB(255,255,255),
+        Increment = 1,
+        ValueName = "Gravity",
+        Callback = function(Value)
+            workspace.Gravity = Value
+        end    
+    })
+
+    PlayerTab:AddSlider({
+        Name = "Character Transparency",
+        Min = 0,
+        Max = 1,
+        Default = 0,
+        Color = Color3.fromRGB(255, 255, 255),
+        Increment = 0.01,
+        ValueName = "Transparency",
+        Callback = function(Value)
+            for _, v in pairs(Player.Character:GetDescendants()) do
+                if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+                    v.Transparency = Value
+                end
+            end
+        end    
+    })
+
+    PlayerTab:AddSlider({
+        Name = "Camera FOV",
+        Min = 10,
+        Max = 120,
+        Default = workspace.CurrentCamera.FieldOfView,
+        Color = Color3.fromRGB(255, 255, 255),
+        Increment = 1,
+        ValueName = "FOV",
+        Callback = function(Value)
+            workspace.CurrentCamera.FieldOfView = Value
+        end    
+    })
+
+    local TeleportTab = MainWindow:MakeTab({
+        Name = "Teleport",
+        Icon = "rbxassetid://2790546266",
+        PremiumOnly = false
+    })
+
+    TeleportTab:AddButton({
+        Name = "Teleport To Lobby",
+        Callback = function()
+            local character = Player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:SetPrimaryPartCFrame(CFrame.new(-109.785706, 136.772766, 33.1300697))
+            end
+        end    
+    })
+
+    TeleportTab:AddButton({
+        Name = "Teleport To Event",
+        Callback = function()
+            local character = Player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:SetPrimaryPartCFrame(CFrame.new(-102.353218078661328, 139.189453125, -58.532554626464844))
+            end
+        end    
+    })
+
+    TeleportTab:AddButton({
+        Name = "Teleport To Map Voting",
+        Callback = function()
+            local character = Player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:SetPrimaryPartCFrame(CFrame.new(-3325.42333984375, 40.83646011352539, 2873.132080078125))
+            end
+        end    
+    })
+
+    TeleportTab:AddButton({
+        Name = "Teleport To Murderer",
+        Callback = function()
+            local murderer
+            for _, player in pairs(game.Players:GetPlayers()) do
+                if player.Backpack:FindFirstChild("Knife") or (player.Character and player.Character:FindFirstChild("Knife")) then
+                    murderer = player
+                    break
+                end
+            end
+            
+            if murderer and murderer.Character and murderer.Character:FindFirstChild("HumanoidRootPart") then
+                local character = Player.Character
+                character:SetPrimaryPartCFrame(murderer.Character.HumanoidRootPart.CFrame)
+            else
+                OrionLib:MakeNotification({
+                    Name = "Murderer Not Found!",
+                    Content = "Could not find the murderer.",
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            end
+        end    
+    })
+
+    TeleportTab:AddButton({
+        Name = "Teleport To Sheriff",
+        Callback = function()
+            local sheriff
+            for _, player in pairs(game.Players:GetPlayers()) do
+                if player.Backpack:FindFirstChild("Gun") or (player.Character and player.Character:FindFirstChild("Gun")) then
+                    sheriff = player
+                    break
+                end
+            end
+            
+            if sheriff and sheriff.Character and sheriff.Character:FindFirstChild("HumanoidRootPart") then
+                local character = Player.Character
+                character:SetPrimaryPartCFrame(sheriff.Character.HumanoidRootPart.CFrame)
+            else
+                OrionLib:MakeNotification({
+                    Name = "Sheriff Not Found!",
+                    Content = "Could not find the sheriff.",
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            end
+        end    
+    })
+
+    -- TextBox for entering a player's name to teleport to
+    TeleportTab:AddTextbox({
+        Name = "Teleport To Player",
+        Default = "",
+        TextDisappear = true,
+        Callback = function(Value)
+            local targetPlayer = game.Players:FindFirstChild(Value)
+            if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local character = Player.Character
+                character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
+            else
+                OrionLib:MakeNotification({
+                    Name = "Player Not Found!",
+                    Content = "Could not find the player "..Value..".",
+                    Image = "rbxassetid://4483345998",
+                    Time = 3
+                })
+            end
+        end    
+    })
+
+    local KeybindsTab = MainWindow:MakeTab({
+        Name = "Keybinds",
+        Icon = "rbxassetid://2786652532",
+        PremiumOnly = false
+    })
+
+    local SettingsTab = MainWindow:MakeTab({
+        Name = "Farming",
+        Icon = "rbxassetid://2790176032",
+        PremiumOnly = false
+    })
+
+    local UiTab = MainWindow:MakeTab({
+        Name = "",
+        Icon = "rbxassetid://2790676563",
+        PremiumOnly = false
+    })
+
+    local CreditsTab = MainWindow:MakeTab({
+        Name = "Credits",
+        Icon = "rbxassetid://2790458276",
+        PremiumOnly = false
+    })
+
+    local UpdatesTab = MainWindow:MakeTab({
+        Name = "Updates",
+        Icon = "rbxassetid://2790173610",
+        PremiumOnly = false
+    })
+end
+
+local function ShowCorrectKeyNotification()
+    OrionLib:MakeNotification({
+        Name = "Correct Key!",
+        Content = "Loading Ryware Hub...",
+        Image = "rbxassetid://4483345998",
+        Time = 2
+    })
+end
+
+local function ShowIncorrectKeyNotification()
+    OrionLib:MakeNotification({
+        Name = "Incorrect Key!",
+        Content = "Enter The Correct Key.",
+        Image = "rbxassetid://4483345998",
+        Time = 2
+    })
+end
+
+local KeySystemTab = MainWindow:MakeTab({
+    Name = "Key System",
+    Icon = "rbxassetid://2790551206",
+    PremiumOnly = false
+})
+
+KeySystemTab:AddTextbox({
+    Name = "Enter Key Here!",
+    Default = "Key",
+    TextDisappear = true,
+    Callback = function(Value)
+        _G.KeyInput = Value
+    end    
+})
+
+KeySystemTab:AddButton({
+    Name = "Check Key!",
+    Callback = function()
+        if _G.KeyInput == _G.Key then
+            ShowCorrectKeyNotification()
+            wait(2) 
+            LoadRywareHub() 
+        else
+            ShowIncorrectKeyNotification()
+        end
+    end    
+})
+
+KeySystemTab:AddButton({
+    Name = "Copy Discord To Get Key . . .",
+    Callback = function()
+        setclipboard("https://discord.gg/Qxf4a8UV")
+        OrionLib:MakeNotification({
+            Name = "Discord Link Copied!",
+            Content = "Link copied to clipboard. Join the Discord to get the key.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+    end    
+})
+
+OrionLib:Init()
